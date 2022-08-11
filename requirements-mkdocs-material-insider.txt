@@ -1,0 +1,1 @@
+git+https://${GITHUB_TOKEN}@github.com/consensys/mkdocs-material-insiders.git@8.3.9-insiders-4.21.0

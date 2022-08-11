@@ -1,7 +1,7 @@
 ---
 name: Publish PR preview
 
-on: [ pull_request_target ]
+on: [ pull_request ]
 
 env:
   IMAGE_NAME: doctools-builder-test
@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0 # Required for mkdocs to be able to display pages last update info
 
       - name: Get additional Github env vars # vars from Github env, can not be modified by users
-        uses: FranzDiebold/github-env-vars-action@b9b3a88cfa3ad9bde40c291143c28f918e2d1668 #v2.3.0
+        uses: FranzDiebold/github-env-vars-action@61e09f04f9ed65632ac071f703a4b628556c83b6 #v2.5.0
 
       - name: Generate PR slug
         shell: sh
@@ -34,7 +34,11 @@ jobs:
       - name: Build test image
         shell: sh
         run: |
-          docker build . --tag $IMAGE_NAME --build-arg WORKSPACE_DIR=$WORKSPACE_DIR
+          docker build . \
+          --tag $IMAGE_NAME \
+          --build-arg WORKSPACE_DIR=$WORKSPACE_DIR \
+          --build-arg MATERIAL_REQUIREMENT_FILE=requirements-mkdocs-material-insider.txt \
+          --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
       - name: Build preview site
         shell: sh
@@ -48,7 +52,7 @@ jobs:
           --config-file /workspace/tests/mkdocs.yml
 
       - name: Deploy Preview
-        uses: JamesIves/github-pages-deploy-action@6ce741f5d4e01e15f9ea5ec96df1a43f522c330f #4.1.7
+        uses: JamesIves/github-pages-deploy-action@13046b614c663b56cba4dda3f30b9736a748b80d #4.4.0
         with:
           branch: pr-preview # The branch the action should deploy to.
           folder: tests/site # The folder the action should deploy.
