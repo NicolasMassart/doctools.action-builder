@@ -14,9 +14,10 @@ RUN apk upgrade --update-cache -a && \
     nodejs
 COPY requirements.txt requirements.txt
 COPY $MATERIAL_REQUIREMENT_FILE $MATERIAL_REQUIREMENT_FILE
+COPY mkdocs-material-insiders mkdocs-material-insiders
 COPY mkdocs-macro-pluglets mkdocs-macro-pluglets
 RUN /usr/local/bin/python -m pip install --upgrade pip
-RUN GITHUB_TOKEN=$GITHUB_TOKEN pip install -r requirements.txt -r $MATERIAL_REQUIREMENT_FILE --no-cache-dir
+RUN pip install -r requirements.txt -r $MATERIAL_REQUIREMENT_FILE --no-cache-dir
 COPY common common
 
 # see https://github.blog/2022-04-12-git-security-vulnerability-announced/
