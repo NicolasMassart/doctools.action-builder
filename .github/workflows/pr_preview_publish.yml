@@ -3,6 +3,17 @@ name: Publish PR preview
 
 on: [ pull_request ]
 
+concurrency:
+  group: PR${{ github.event.number }}-preview
+  cancel-in-progress: true
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
 env:
   IMAGE_NAME: doctools-builder-test
   WORKSPACE_DIR: /workspace
@@ -12,9 +23,6 @@ jobs:
     name: Build and publish PR preview
     runs-on: ubuntu-latest
     environment: preview
-    permissions:
-      contents: write
-      pull-requests: write
 
     steps:
       - name: Checkout code from repos
